@@ -17,3 +17,12 @@ spring:
       path: /h2-console
   profiles:
     default: default
+jwt:
+  header: Authorization
+  # echo 'atto-research-assignment-by-jiyoung-lee' | base64
+  secret: YXR0by1yZXNlYXJjaC1hc3NpZ25tZW50LWJ5LWppeW91bmctbGVlCg==
+  token-validity-in-seconds: 86400
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
