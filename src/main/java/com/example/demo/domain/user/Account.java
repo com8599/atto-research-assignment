@@ -22,13 +22,16 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt;
+
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Date editedAt;
 
     @Column(length = 3)
     private int kind;
 
-    @Column(length = 3)
+    @Column(length = 3, columnDefinition = "INT DEFAULT 0")
     private int state;
 
     @Column(nullable = false, unique = true)
