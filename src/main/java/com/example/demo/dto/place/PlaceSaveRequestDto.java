@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.Date;
+import java.sql.Time;
 
 @Getter
 @Builder
@@ -18,10 +18,16 @@ public class PlaceSaveRequestDto {
     private String address;
 
     @Schema(description = "여는 시간")
-    private Date openAt;
+    private Time openAt;
 
     @Schema(description = "닫는 시간")
-    private Date closeAt;
+    private Time closeAt;
+
+    @Schema(description = "예약 가능 여부")
+    private boolean reserve;
+
+    @Schema(description = "최대 예약 인원")
+    private int reserveMax;
 
     public Place toEntity() {
         return Place.builder()
@@ -29,6 +35,8 @@ public class PlaceSaveRequestDto {
                 .address(address)
                 .openAt(openAt)
                 .closeAt(closeAt)
+                .reserve(reserve)
+                .reserveMax(reserveMax)
                 .build();
     }
 }

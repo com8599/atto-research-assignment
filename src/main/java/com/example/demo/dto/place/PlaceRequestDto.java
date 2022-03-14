@@ -4,7 +4,7 @@ import com.example.demo.domain.place.Place;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-import java.util.Date;
+import java.sql.Time;
 
 @Getter
 public class PlaceRequestDto {
@@ -21,10 +21,16 @@ public class PlaceRequestDto {
     private final String address;
 
     @Schema(description = "여는 시간")
-    private final Date openAt;
+    private final Time openAt;
 
     @Schema(description = "닫는 시간")
-    private final Date closeAt;
+    private final Time closeAt;
+
+    @Schema(description = "예약 가능 여부")
+    private final boolean reserve;
+
+    @Schema(description = "최대 예약 인원")
+    private final int reserveMax;
 
     public PlaceRequestDto(Place place) {
         this.id = place.getId();
@@ -33,5 +39,7 @@ public class PlaceRequestDto {
         this.address = place.getAddress();
         this.openAt = place.getOpenAt();
         this.closeAt = place.getCloseAt();
+        this.reserve = place.isReserve();
+        this.reserveMax = place.getReserveMax();
     }
 }

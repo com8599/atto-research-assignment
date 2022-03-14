@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.Date;
+import java.sql.Time;
 
 @Getter
 @Builder
@@ -20,8 +20,14 @@ public class PlaceUpdateRequestDto {
     private String address;
 
     @Schema(description = "여는 시간")
-    private Date openAt;
+    private Time openAt;
 
     @Schema(description = "닫는 시간")
-    private Date closeAt;
+    private Time closeAt;
+
+    @Schema(description = "예약 가능여부")
+    private Boolean reserve;
+
+    @Schema(description = "최대 예약 인원")
+    private Integer reserveMax;
 }
