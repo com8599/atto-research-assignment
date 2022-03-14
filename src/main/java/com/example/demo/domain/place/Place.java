@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.util.Date;
 import java.util.Optional;
 
@@ -21,10 +22,13 @@ public class Place {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt;
+
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Date editedAt;
 
-    @Column(length = 3)
+    @Column(length = 3, columnDefinition = "INT DEFAULT 0")
     private int state;
 
     @Column(length = 50, nullable = false)
@@ -32,8 +36,12 @@ public class Place {
 
     private String address;
 
-    private Date openAt;
-    private Date closeAt;
+    private Time openAt;
+    private Time closeAt;
+
+    private boolean reserve;
+
+    private int reserveMax;
 
     public void update(PlaceUpdateRequestDto requestDto) {
         Optional.ofNullable(requestDto.getState()).ifPresent(e -> this.state = e);
@@ -41,5 +49,7 @@ public class Place {
         Optional.ofNullable(requestDto.getAddress()).ifPresent(e -> this.address = e);
         Optional.ofNullable(requestDto.getOpenAt()).ifPresent(e -> this.openAt = e);
         Optional.ofNullable(requestDto.getCloseAt()).ifPresent(e -> this.closeAt = e);
+        Optional.ofNullable(requestDto.getReserve()).ifPresent(e -> this.reserve = e);
+        Optional.ofNullable(requestDto.getReserveMax()).ifPresent(e -> this.reserveMax = e);
     }
 }
