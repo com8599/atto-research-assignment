@@ -1,6 +1,6 @@
-package com.example.demo.sevice;
+package com.example.demo.sevice.user;
 
-import com.example.demo.dto.AccountLoginRequestDto;
+import com.example.demo.dto.user.AccountLoginRequestDto;
 import com.example.demo.dto.ResultDto;
 import com.example.demo.security.JwtFilter;
 import com.example.demo.security.TokenProvider;

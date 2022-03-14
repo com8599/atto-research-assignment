@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.user;
 
 import com.example.demo.domain.user.Account;
 import io.swagger.v3.oas.annotations.media.Schema;

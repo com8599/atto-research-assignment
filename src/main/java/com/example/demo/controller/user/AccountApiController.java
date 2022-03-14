@@ -1,10 +1,10 @@
-package com.example.demo.controller;
+package com.example.demo.controller.user;
 
-import com.example.demo.dto.AccountLoginRequestDto;
-import com.example.demo.dto.AccountSaveRequestDto;
-import com.example.demo.dto.AccountUpdateRequestDto;
+import com.example.demo.dto.user.AccountLoginRequestDto;
+import com.example.demo.dto.user.AccountSaveRequestDto;
+import com.example.demo.dto.user.AccountUpdateRequestDto;
 import com.example.demo.dto.ResultDto;
-import com.example.demo.sevice.AccountService;
+import com.example.demo.sevice.user.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

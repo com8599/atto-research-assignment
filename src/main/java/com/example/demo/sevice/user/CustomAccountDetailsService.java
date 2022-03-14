@@ -1,4 +1,4 @@
- package com.example.demo.sevice;
+ package com.example.demo.sevice.user;
 
  import com.example.demo.domain.user.Account;
  import com.example.demo.domain.user.AccountRepository;

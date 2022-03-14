@@ -1,8 +1,8 @@
-package com.example.demo.controller;
+package com.example.demo.controller.user;
 
-import com.example.demo.dto.AccountLoginRequestDto;
+import com.example.demo.dto.user.AccountLoginRequestDto;
 import com.example.demo.dto.ResultDto;
-import com.example.demo.sevice.AuthService;
+import com.example.demo.sevice.user.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
