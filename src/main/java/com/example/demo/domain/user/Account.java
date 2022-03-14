@@ -1,6 +1,6 @@
 package com.example.demo.domain.user;
 
-import com.example.demo.dto.AccountUpdateRequestDto;
+import com.example.demo.dto.user.AccountUpdateRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

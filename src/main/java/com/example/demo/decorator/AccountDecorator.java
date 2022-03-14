@@ -4,7 +4,7 @@ import com.example.demo.domain.user.Account;
 import com.example.demo.domain.user.AccountRepository;
 import com.example.demo.domain.user.Authority;
 import com.example.demo.domain.user.AuthorityRepository;
-import com.example.demo.dto.AccountSaveRequestDto;
+import com.example.demo.dto.user.AccountSaveRequestDto;
 import com.example.demo.model.AccountRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
