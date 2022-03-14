@@ -13,13 +13,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/place")
 @RestController
 @Tag(name = "장소 - 장소 관련 api")
 public class PlaceApiController {
     private final PlaceService placeService;
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @PostMapping("/api/v1/place")
+    @PostMapping()
     @Operation(summary = "장소 추가")
     public ResponseEntity<ResultDto> save(
             @RequestBody PlaceSaveRequestDto requestDto
@@ -28,7 +29,7 @@ public class PlaceApiController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PutMapping("/api/v1/place/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "장소 수정")
     public ResponseEntity<ResultDto> update(
             @PathVariable Long id,
@@ -38,7 +39,7 @@ public class PlaceApiController {
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("/api/v1/place/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "장소 조회")
     @Parameter(name = "id", required = true, example = "0")
     public ResponseEntity<ResultDto> findById(@PathVariable Long id) {

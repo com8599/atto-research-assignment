@@ -15,13 +15,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/account")
 @RestController
 @Tag(name = "계정 - 계정 관련 api")
 @Slf4j
 public class AccountApiController {
     private final AccountService accountService;
 
-    @PostMapping("/api/v1/account")
+    @PostMapping()
     @Operation(summary = "회원 가입")
     public ResponseEntity<ResultDto> save(
             @RequestBody AccountSaveRequestDto requestDto
@@ -31,7 +32,7 @@ public class AccountApiController {
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @PutMapping("/api/v1/account")
+    @PutMapping()
     @Operation(summary = "회원 정보 수정-자신")
     public ResponseEntity<ResultDto> update(
             @RequestBody AccountUpdateRequestDto requestDto
@@ -40,8 +41,8 @@ public class AccountApiController {
         return accountService.update(requestDto);
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("/api/v1/account/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping("/{id}")
     @Operation(summary = "회원 정보 조회")
     @Parameter(name = "id", required = true, example = "0")
     public ResponseEntity<ResultDto> findById(@PathVariable Long id) {
@@ -50,14 +51,14 @@ public class AccountApiController {
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("/api/v1/account")
+    @GetMapping()
     @Operation(summary = "회원 자신의 정보 조회")
     public ResponseEntity<ResultDto> findMe() {
         log.info("/api/v1/account get controller");
         return accountService.findMe();
     }
 
-    @GetMapping("/api/v1/account/email/{email}")
+    @GetMapping("/email/{email}")
     @Operation(summary = "존재하는 이메일인지")
     @Parameter(name = "email", description = "회원의 고유 email", required = true)
     public ResponseEntity<ResultDto> emailExisted(@PathVariable String email) {
@@ -65,7 +66,7 @@ public class AccountApiController {
         return accountService.emailExisted(email);
     }
 
-    @PostMapping("/api/v1/account/login")
+    @PostMapping("/login")
     @Operation(summary = "로그인")
     public ResponseEntity<ResultDto> login(@RequestBody AccountLoginRequestDto requestDto) {
         log.info("/api/v1/account/login post controller");
