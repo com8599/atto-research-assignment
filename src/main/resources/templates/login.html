@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <title>Spring Security</title>
+    <script>
+        function login() {
+            let data = {email: document.getElementById("email").value, password: document.getElementById("password").value};
+            console.log(data);
+
+            fetch('/api/v1/account/login', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers:{
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(myJson) {
+                    console.log(JSON.stringify(myJson));
+
+                });
+        }
+    </script>
+</head>
+<body class="text-center">
+<div class="form-signin"> <!-- 요청 보내기-->
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+
+    <div th:if="${param.error}"  class="alert alert-danger" role="alert">
+        Invalid username and password
+    </div>
+
+    <div th:if="${param.logout}"  class="alert alert-primary" role="alert">
+        You have been logged out
+    </div>
+
+    <label for="email" class="sr-only">username</label>
+    <input type="text" id="email" name="username" class="form-control" placeholder="username" required autofocus>
+
+    <label for="password" class="sr-only">password</label>
+    <input type="password" id="password" name="password" class="form-control" placeholder="password" required>
+
+    <button class="btn btn-lg btn-primary btn-block" onclick="login()">Sign in</button>
+
+    <p class="mt-5 mb-3 text-muted">&copy; 2022</p>
+</div>
+</body>

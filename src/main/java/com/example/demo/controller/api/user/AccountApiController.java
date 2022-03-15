@@ -1,4 +1,4 @@
-package com.example.demo.controller.user;
+package com.example.demo.controller.api.user;
 
 import com.example.demo.dto.user.AccountLoginRequestDto;
 import com.example.demo.dto.user.AccountSaveRequestDto;
@@ -68,7 +68,7 @@ public class AccountApiController {
 
     @PostMapping("/login")
     @Operation(summary = "로그인")
-    public ResponseEntity<ResultDto> login(@RequestBody AccountLoginRequestDto requestDto) {
+    public @ResponseBody ResponseEntity<ResultDto> login(@RequestBody AccountLoginRequestDto requestDto) {
         log.info("/api/v1/account/login post controller");
         return accountService.login(requestDto);
     }

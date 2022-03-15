@@ -1,4 +1,4 @@
-package com.example.demo.controller.place;
+package com.example.demo.controller.api.place;
 
 import com.example.demo.dto.ResultDto;
 import com.example.demo.dto.place.ReservationSaveRequestDto;

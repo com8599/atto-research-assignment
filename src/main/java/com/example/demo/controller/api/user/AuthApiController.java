@@ -1,4 +1,4 @@
-package com.example.demo.controller.user;
+package com.example.demo.controller.api.user;
 
 import com.example.demo.dto.user.AccountLoginRequestDto;
 import com.example.demo.dto.ResultDto;
