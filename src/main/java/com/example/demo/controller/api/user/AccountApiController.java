@@ -15,7 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/account")
+@RequestMapping("/api/v1/accounts")
 @RestController
 @Tag(name = "계정 - 계정 관련 api")
 @Slf4j
@@ -42,7 +42,7 @@ public class AccountApiController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @Operation(summary = "회원 정보 조회")
     @Parameter(name = "id", required = true, example = "0")
     public ResponseEntity<ResultDto> findById(@PathVariable Long id) {
@@ -58,7 +58,7 @@ public class AccountApiController {
         return accountService.findMe();
     }
 
-    @GetMapping("/email/{email}")
+    @GetMapping("email/{email}")
     @Operation(summary = "존재하는 이메일인지")
     @Parameter(name = "email", description = "회원의 고유 email", required = true)
     public ResponseEntity<ResultDto> emailExisted(@PathVariable String email) {
@@ -66,7 +66,7 @@ public class AccountApiController {
         return accountService.emailExisted(email);
     }
 
-    @PostMapping("/login")
+    @PostMapping("login")
     @Operation(summary = "로그인")
     public @ResponseBody ResponseEntity<ResultDto> login(@RequestBody AccountLoginRequestDto requestDto) {
         log.info("/api/v1/account/login post controller");

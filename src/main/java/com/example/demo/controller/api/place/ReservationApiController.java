@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/reservation")
+@RequestMapping("/api/v1/reservations")
 @RestController
 @Tag(name = "장소 - 예약 관련 api")
 public class ReservationApiController {
@@ -26,14 +26,14 @@ public class ReservationApiController {
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     @Operation(summary = "예약수정")
     public ResponseEntity<ResultDto> update(@PathVariable Long id, @RequestBody ReservationUpdateRequestDto requestDto) {
         return reservationService.update(id, requestDto);
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @Operation(summary = "예약 상세보기")
     public ResponseEntity<ResultDto> findById(@PathVariable Long id) {
         return reservationService.findById(id);

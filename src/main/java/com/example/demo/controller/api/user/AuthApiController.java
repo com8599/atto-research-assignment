@@ -22,7 +22,7 @@ public class AuthApiController {
     private final AuthService authService;
 
     @Operation(summary = "jwt 토큰 발급하기")
-    @PostMapping("/api/v1/authenticate")
+    @PostMapping("/api/v1/authenticates")
     public ResponseEntity<ResultDto> authorize(@Valid @RequestBody AccountLoginRequestDto requestDto) {
         log.info("/api/v1/authenticate post controller");
         return authService.authorize(requestDto);

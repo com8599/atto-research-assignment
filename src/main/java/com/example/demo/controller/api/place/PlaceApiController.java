@@ -13,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/place")
+@RequestMapping("/api/v1/places")
 @RestController
 @Tag(name = "장소 - 장소 관련 api")
 public class PlaceApiController {
@@ -27,14 +27,14 @@ public class PlaceApiController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     @Operation(summary = "장소 수정")
     public ResponseEntity<ResultDto> update(@PathVariable Long id, @RequestBody PlaceUpdateRequestDto requestDto) {
         return placeService.update(id, requestDto);
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @Operation(summary = "장소 조회")
     @Parameter(name = "id", required = true, example = "0")
     public ResponseEntity<ResultDto> findById(@PathVariable Long id) {
@@ -42,7 +42,7 @@ public class PlaceApiController {
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("s")
+    @GetMapping("list")
     @Operation(summary = "장소 조회 - 다수")
     public ResponseEntity<ResultDto> findAll() {
         return placeService.findAll();
