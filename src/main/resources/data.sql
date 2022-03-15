@@ -1,9 +1,9 @@
 insert into authority (authority_name) values ('ROLE_USER');
 insert into authority (authority_name) values ('ROLE_ADMIN');
 
-insert into account(kind, email, pw, nickname) values (0, 'test01@gmail.com', '$2a$10$iTotdzVwnabQaEfUfJPBm.AmNDCf972VgV3N.rrwZS6wPw9nfDITi', 'test01');
-insert into account(kind, email, pw, nickname) values (1, 'test02@gmail.com', '$2a$10$iTotdzVwnabQaEfUfJPBm.AmNDCf972VgV3N.rrwZS6wPw9nfDITi', 'test02');
-insert into account(kind, email, pw, nickname) values (1, 'test03@gmail.com', '$2a$10$iTotdzVwnabQaEfUfJPBm.AmNDCf972VgV3N.rrwZS6wPw9nfDITi', 'test03');
+insert into account(kind, email, pw, nickname) values (0, 'test01@gmail.com', '$2a$10$c0HWGStVRYPbLeJqWxGFpuHKmfl6PKew6kZzBNNm/gyaN6yNgc3M2', 'test01');
+insert into account(kind, email, pw, nickname) values (1, 'test02@gmail.com', '$2a$10$c0HWGStVRYPbLeJqWxGFpuHKmfl6PKew6kZzBNNm/gyaN6yNgc3M2', 'test02');
+insert into account(kind, email, pw, nickname) values (1, 'test03@gmail.com', '$2a$10$c0HWGStVRYPbLeJqWxGFpuHKmfl6PKew6kZzBNNm/gyaN6yNgc3M2', 'test03');
 
 insert into account_authorities(account_id, authority_name) values (1, 'ROLE_ADMIN');
 insert into account_authorities(account_id, authority_name) values (1, 'ROLE_USER');
