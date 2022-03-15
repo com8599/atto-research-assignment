@@ -13,3 +13,6 @@ insert into account_authorities(account_id, authority_name) values (3, 'ROLE_USE
 insert into place(name, address, open_at, close_at, reserve, reserve_max) values ('testPlace01', 'testPlace01address', '11:00:00', '20:00:00', true, 20);
 insert into place(name, address, open_at, close_at, reserve, reserve_max) values ('testPlace02', 'testPlace02address', '10:00:00', '22:00:00', false, 10);
 insert into place(name, address, open_at, close_at, reserve, reserve_max) values ('testPlace03', 'testPlace03address', '13:00:00', '23:00:00', true, 200);
+
+insert into reservation(place_id, account_id, reserve_at) values (1, 1, now());
+insert into reservation(place_id, account_id, reserve_at) values (1, 2, now());
