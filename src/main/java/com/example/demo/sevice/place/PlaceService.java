@@ -25,6 +25,7 @@ public class PlaceService {
         return makeResult(HttpStatus.OK, placeRepository.save(requestDto.toEntity()).getId());
     }
 
+    @Transactional
     public ResponseEntity<ResultDto> update(Long id, PlaceUpdateRequestDto requestDto) {
         Place place = placeRepository.findByIdAndStateIsLessThan(id, StateKind.DELETE.getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 장소가 존재하지 않습니다. id=" + id));

@@ -22,19 +22,14 @@ public class PlaceApiController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping()
     @Operation(summary = "장소 추가")
-    public ResponseEntity<ResultDto> save(
-            @RequestBody PlaceSaveRequestDto requestDto
-    ) {
+    public ResponseEntity<ResultDto> save(@RequestBody PlaceSaveRequestDto requestDto) {
         return placeService.save(requestDto);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/{id}")
     @Operation(summary = "장소 수정")
-    public ResponseEntity<ResultDto> update(
-            @PathVariable Long id,
-            @RequestBody PlaceUpdateRequestDto requestDto
-    ) {
+    public ResponseEntity<ResultDto> update(@PathVariable Long id, @RequestBody PlaceUpdateRequestDto requestDto) {
         return placeService.update(id, requestDto);
     }
 
