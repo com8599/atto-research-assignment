@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class PlaceApiController {
     private final PlaceService placeService;
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping()
     @Operation(summary = "장소 추가")
     public ResponseEntity<ResultDto> save(@RequestBody PlaceSaveRequestDto requestDto) {
@@ -39,5 +39,12 @@ public class PlaceApiController {
     @Parameter(name = "id", required = true, example = "0")
     public ResponseEntity<ResultDto> findById(@PathVariable Long id) {
         return placeService.findById(id);
+    }
+
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @GetMapping("s")
+    @Operation(summary = "장소 조회 - 다수")
+    public ResponseEntity<ResultDto> findAll() {
+        return placeService.findAll();
     }
 }
