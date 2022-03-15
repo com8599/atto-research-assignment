@@ -31,4 +31,11 @@ public class ReservationApiController {
     public ResponseEntity<ResultDto> update(@PathVariable Long id, @RequestBody ReservationUpdateRequestDto requestDto) {
         return reservationService.update(id, requestDto);
     }
+
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @GetMapping("/{id}")
+    @Operation(summary = "예약 상세보기")
+    public ResponseEntity<ResultDto> findById(@PathVariable Long id) {
+        return reservationService.findById(id);
+    }
 }

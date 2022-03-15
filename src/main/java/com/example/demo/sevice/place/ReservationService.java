@@ -6,11 +6,10 @@ import com.example.demo.domain.place.Reservation;
 import com.example.demo.domain.place.ReservationRepository;
 import com.example.demo.domain.user.Account;
 import com.example.demo.domain.user.AccountRepository;
-import com.example.demo.domain.user.Authority;
 import com.example.demo.dto.ResultDto;
+import com.example.demo.dto.place.ReservationRequestDto;
 import com.example.demo.dto.place.ReservationSaveRequestDto;
 import com.example.demo.dto.place.ReservationUpdateRequestDto;
-import com.example.demo.model.AccountRole;
 import com.example.demo.model.StateKind;
 import com.example.demo.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -44,23 +43,20 @@ public class ReservationService {
 
     @Transactional
     public ResponseEntity<ResultDto> update(Long id, ReservationUpdateRequestDto requestDto) {
-        Account account = SecurityUtil.getCurrentEmail().flatMap(accountRepository::findOneWithAuthoritiesByEmail)
-                .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL));
-
         Reservation reservation = reservationRepository.findByIdAndStateIsLessThan(id, StateKind.DELETE.getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 예약이 없습니다. id=" + id));
 
-        Authority authority = Authority.builder()
-                .authorityName(AccountRole.ROLE_ADMIN.name())
-                .build();
+        Place place = placeRepository.findByIdAndStateIsLessThan(requestDto.getPlaceId(), StateKind.DELETE.getId())
+                .orElseThrow(() -> new IllegalArgumentException(PLACE_NULL + requestDto.getPlaceId()));
 
-        if (!account.getAuthorities().contains(authority) && !reservation.getAccount().equals(account)) {
-            return makeResult(HttpStatus.INTERNAL_SERVER_ERROR, "잘못된 요청입니다.");
-        } else {
-            Place place = placeRepository.findByIdAndStateIsLessThan(requestDto.getPlaceId(), StateKind.DELETE.getId())
-                    .orElseThrow(() -> new IllegalArgumentException(PLACE_NULL + requestDto.getPlaceId()));
-            reservation.update(requestDto, place);
-            return makeResult(HttpStatus.OK, reservation.getId());
-        }
+        reservation.update(requestDto, place);
+        return makeResult(HttpStatus.OK, reservation.getId());
+    }
+
+    public ResponseEntity<ResultDto> findById(Long id) {
+        Reservation reservation = reservationRepository.findByIdAndStateIsLessThan(id, StateKind.DELETE.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 예약이 없습니다. id=" + id));
+
+        return makeResult(HttpStatus.OK, new ReservationRequestDto(reservation));
     }
 }
