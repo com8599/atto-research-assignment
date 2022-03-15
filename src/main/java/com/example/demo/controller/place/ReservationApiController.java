@@ -1,7 +1,8 @@
 package com.example.demo.controller.place;
 
 import com.example.demo.dto.ResultDto;
-import com.example.demo.dto.reservation.ReservationSaveRequestDto;
+import com.example.demo.dto.place.ReservationSaveRequestDto;
+import com.example.demo.dto.place.ReservationUpdateRequestDto;
 import com.example.demo.sevice.place.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,5 +23,12 @@ public class ReservationApiController {
     @Operation(summary = "예약추가")
     public ResponseEntity<ResultDto> save(@RequestBody ReservationSaveRequestDto requestDto) {
         return reservationService.save(requestDto);
+    }
+
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PutMapping("/{id}")
+    @Operation(summary = "예약수정")
+    public ResponseEntity<ResultDto> update(@PathVariable Long id, @RequestBody ReservationUpdateRequestDto requestDto) {
+        return reservationService.update(id, requestDto);
     }
 }

@@ -2,11 +2,15 @@ package com.example.demo.sevice.place;
 
 import com.example.demo.domain.place.Place;
 import com.example.demo.domain.place.PlaceRepository;
+import com.example.demo.domain.place.Reservation;
 import com.example.demo.domain.place.ReservationRepository;
 import com.example.demo.domain.user.Account;
 import com.example.demo.domain.user.AccountRepository;
+import com.example.demo.domain.user.Authority;
 import com.example.demo.dto.ResultDto;
-import com.example.demo.dto.reservation.ReservationSaveRequestDto;
+import com.example.demo.dto.place.ReservationSaveRequestDto;
+import com.example.demo.dto.place.ReservationUpdateRequestDto;
+import com.example.demo.model.AccountRole;
 import com.example.demo.model.StateKind;
 import com.example.demo.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +29,38 @@ public class ReservationService {
     private final AccountRepository accountRepository;
 
     private static final String ACCOUNT_NULL = "해당하는 유저가 없습니다.";
+    private static final String PLACE_NULL = "해당 장소가 존재하지 않습니다. id=";
 
     @Transactional
     public ResponseEntity<ResultDto> save(ReservationSaveRequestDto requestDto) {
         Place place = placeRepository.findByIdAndStateIsLessThan(requestDto.getPlaceId(), StateKind.DELETE.getId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 장소가 존재하지 않습니다. id=" + requestDto.getPlaceId()));
+                .orElseThrow(() -> new IllegalArgumentException(PLACE_NULL + requestDto.getPlaceId()));
 
         Account account = SecurityUtil.getCurrentEmail().flatMap(accountRepository::findOneWithAuthoritiesByEmail)
                 .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL));
 
         return makeResult(HttpStatus.OK, reservationRepository.save(requestDto.toEntity(place, account)).getId());
+    }
+
+    @Transactional
+    public ResponseEntity<ResultDto> update(Long id, ReservationUpdateRequestDto requestDto) {
+        Account account = SecurityUtil.getCurrentEmail().flatMap(accountRepository::findOneWithAuthoritiesByEmail)
+                .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL));
+
+        Reservation reservation = reservationRepository.findByIdAndStateIsLessThan(id, StateKind.DELETE.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 예약이 없습니다. id=" + id));
+
+        Authority authority = Authority.builder()
+                .authorityName(AccountRole.ROLE_ADMIN.name())
+                .build();
+
+        if (!account.getAuthorities().contains(authority) && !reservation.getAccount().equals(account)) {
+            return makeResult(HttpStatus.INTERNAL_SERVER_ERROR, "잘못된 요청입니다.");
+        } else {
+            Place place = placeRepository.findByIdAndStateIsLessThan(requestDto.getPlaceId(), StateKind.DELETE.getId())
+                    .orElseThrow(() -> new IllegalArgumentException(PLACE_NULL + requestDto.getPlaceId()));
+            reservation.update(requestDto, place);
+            return makeResult(HttpStatus.OK, reservation.getId());
+        }
     }
 }
