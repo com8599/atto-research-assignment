@@ -3,8 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <title>시설 관리 페이지</title>
+    <script>
+        function setTable(books) {
+            let list = document.getElementById("list");
+            books.forEach(e => {
+                let tr = document.createElement("tr");
+                let td = document.createElement("td");
+                td.innerText = e.id;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.state;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.name;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.address;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.openAt;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.closeAt;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.reserve;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.reserveMax;
+                tr.appendChild(td);
+                list.appendChild(tr);
+            });
+        }
+
+        function getAccounts() {
+            fetch('/api/v1/places/list', {
+                method: 'GET',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Authorization': sessionStorage.getItem("jwt"),
+                }
+            })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(myJson) {
+                    console.log(JSON.stringify(myJson.result));
+                    let books = myJson.result;
+                    setTable(books);
+                });
+        }
+
+        window.onload = function () {
+            getAccounts();
+        }
+    </script>
 </head>
 <body>
-
+<table>
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>state</th>
+        <th>name</th>
+        <th>address</th>
+        <th>openAt</th>
+        <th>closeAt</th>
+        <th>reserve</th>
+        <th>reserveMax</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+    </tbody>
+</table>
+<button onclick="window.location.href='../'">어드민으로 돌아가기</button>
 </body>
 </html>
