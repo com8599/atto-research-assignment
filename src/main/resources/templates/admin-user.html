@@ -4,8 +4,34 @@
     <meta charset="UTF-8">
     <title>유저 관리 페이지</title>
     <script>
-        function getReservations() {
-            fetch('api/v1/accounts/list', {
+        function setTable(books) {
+            let list = document.getElementById("list");
+            books.forEach(e => {
+                let tr = document.createElement("tr");
+                let td = document.createElement("td");
+                td.innerText = e.id;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.kind;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.state;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.email;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.nickname;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.phoneNumber;
+                tr.appendChild(td);
+                list.appendChild(tr);
+            });
+        }
+
+        function getAccounts() {
+            fetch('/api/v1/accounts/list', {
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',
@@ -21,9 +47,27 @@
                     setTable(books);
                 });
         }
+
+        window.onload = function () {
+            getAccounts();
+        }
     </script>
 </head>
 <body>
+<table>
+    <thead>
+    <tr>
+        <th> id</th>
+        <th> kind</th>
+        <th> state</th>
+        <th> email</th>
+        <th> nickname</th>
+        <th> phoneNumber</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+    </tbody>
+</table>
 
 </body>
 </html>

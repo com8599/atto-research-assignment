@@ -3,7 +3,7 @@ package com.example.demo.sevice.user;
 import com.example.demo.decorator.AccountDecorator;
 import com.example.demo.domain.user.Account;
 import com.example.demo.domain.user.AccountRepository;
-import com.example.demo.dto.*;
+import com.example.demo.dto.ResultDto;
 import com.example.demo.dto.user.AccountLoginRequestDto;
 import com.example.demo.dto.user.AccountRequestDto;
 import com.example.demo.dto.user.AccountSaveRequestDto;
@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.demo.dto.ResultDto.makeResult;
 
@@ -88,5 +91,17 @@ public class AccountService {
         Account account = SecurityUtil.getCurrentEmail().flatMap(accountRepository::findOneWithAuthoritiesByEmail)
                 .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL));
         return makeResult(HttpStatus.OK, new AccountRequestDto(account));
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResultDto> findAll() {
+        List<Account> accountList = accountRepository.findAll();
+
+        List<AccountRequestDto> requestDtos = new ArrayList<>();
+        for (Account account : accountList) {
+            requestDtos.add(new AccountRequestDto(account));
+        }
+
+        return makeResult(HttpStatus.OK, requestDtos);
     }
 }

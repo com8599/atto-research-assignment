@@ -72,4 +72,12 @@ public class AccountApiController {
         log.info("/api/v1/account/login post controller");
         return accountService.login(requestDto);
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping("list")
+    @Operation(summary = "회원 자신의 정보 조회")
+    public ResponseEntity<ResultDto> findAll() {
+        log.info("/api/v1/accounts/list get controller");
+        return accountService.findAll();
+    }
 }
