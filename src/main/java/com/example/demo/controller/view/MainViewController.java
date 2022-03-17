@@ -30,4 +30,14 @@ public class MainViewController {
     public String common() {
         return "common";
     }
+
+    @RequestMapping("/sign")
+    public String sign() {
+        return "sign";
+    }
+
+    @RequestMapping("/admin")
+    public String admin() {
+        return "admin";
+    }
 }
