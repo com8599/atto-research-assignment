@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>장소 수정</title>
+</head>
+<script>
+    function edit() {
+        let data = {
+            state: document.getElementById("state").value,
+            name: document.getElementById("name").value,
+            address: document.getElementById("address").value,
+            openAt: document.getElementById("openAt").value,
+            closeAt: document.getElementById("closeAt").value,
+            reserve: document.getElementById("reserve").checked,
+            reserveMax: document.getElementById("reserveMax").value
+        };
+        console.log(data);
+
+        fetch('/api/v1/places/' + document.getElementById("id").innerText, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': sessionStorage.getItem("jwt"),
+            }
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (myJson) {
+                console.log(JSON.stringify(myJson.result));
+                window.location.href = "/admin/place";
+            });
+    }
+</script>
+<body>
+<div>
+    장소 아이디: <span id="id" th:text="${place.id}"></span>
+</div>
+<div>
+    <label for="state">상태: </label>
+    <input type="number" id="state" th:value="${place.state}">
+</div>
+<div>
+    <label for="name">이름: </label>
+    <input type="text" id="name" th:value="${place.name}">
+</div>
+<div>
+    <label for="address">주소: </label>
+    <input type="text" id="address" th:value="${place.address}">
+</div>
+<div>
+    <label for="openAt">여는 시간: </label>
+    <input type="time" id="openAt" th:value="${place.openAt}">
+</div>
+<div>
+    <label for="closeAt">닫는 시간: </label>
+    <input type="time" id="closeAt" th:value="${place.closeAt}">
+</div>
+<div>
+    <label for="reserve">예약 가능 여부: </label>
+    <input type="checkbox" id="reserve" th:checked="${place.reserve}">
+</div>
+<div>
+    <label for="reserveMax">최대 예약 인원: </label>
+    <input type="number" id="reserveMax" th:value="${place.reserveMax}">
+</div>
+<button onclick="edit()">수정</button>
+</body>
+</html>
