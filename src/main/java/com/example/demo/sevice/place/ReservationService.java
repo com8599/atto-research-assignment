@@ -18,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.demo.dto.ResultDto.makeResult;
 
 @Service
@@ -53,10 +56,23 @@ public class ReservationService {
         return makeResult(HttpStatus.OK, reservation.getId());
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<ResultDto> findById(Long id) {
         Reservation reservation = reservationRepository.findByIdAndStateIsLessThan(id, StateKind.DELETE.getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 예약이 없습니다. id=" + id));
 
         return makeResult(HttpStatus.OK, new ReservationRequestDto(reservation));
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<ResultDto> findAll() {
+        List<Reservation> list = reservationRepository.findAllByStateIsLessThan(StateKind.DELETE.getId());
+
+        List<ReservationRequestDto> result = new ArrayList<>();
+        for (Reservation reservation : list) {
+            result.add(new ReservationRequestDto(reservation));
+        }
+
+        return makeResult(HttpStatus.OK, result);
     }
 }

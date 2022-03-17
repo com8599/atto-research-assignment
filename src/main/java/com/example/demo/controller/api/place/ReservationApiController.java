@@ -38,4 +38,11 @@ public class ReservationApiController {
     public ResponseEntity<ResultDto> findById(@PathVariable Long id) {
         return reservationService.findById(id);
     }
+
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @GetMapping("list")
+    @Operation(summary = "예약다가져오기")
+    public ResponseEntity<ResultDto> findAll() {
+        return reservationService.findAll();
+    }
 }
