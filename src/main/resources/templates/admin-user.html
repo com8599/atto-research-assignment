@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>유저 관리 페이지</title>
     <script>
+        let books;
         function setTable(books) {
             let list = document.getElementById("list");
             books.forEach(e => {
@@ -26,8 +27,15 @@
                 td = document.createElement("td");
                 td.innerText = e.phoneNumber;
                 tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerHTML += "<button onclick='chgButton(" + e.id + ")'>수정하기</button>";
+                tr.appendChild(td);
                 list.appendChild(tr);
             });
+        }
+
+        function chgButton(e) {
+            window.location.href = "user/edit/" + e;
         }
 
         function getAccounts() {
@@ -43,7 +51,7 @@
                 })
                 .then(function(myJson) {
                     console.log(JSON.stringify(myJson.result));
-                    let books = myJson.result;
+                    books = myJson.result;
                     setTable(books);
                 });
         }
@@ -63,6 +71,7 @@
         <th> email</th>
         <th> nickname</th>
         <th> phoneNumber</th>
+        <th></th>
     </tr>
     </thead>
     <tbody id="list">

@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>시설 관리 페이지</title>
     <script>
-        function setTable(books) {
+        let books;
+        function setTable() {
             let list = document.getElementById("list");
             books.forEach(e => {
                 let tr = document.createElement("tr");
@@ -32,8 +33,15 @@
                 td = document.createElement("td");
                 td.innerText = e.reserveMax;
                 tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerHTML += "<button onclick='chgButton(" + e.id + ")'>수정하기</button>";
+                tr.appendChild(td);
                 list.appendChild(tr);
             });
+        }
+
+        function chgButton(e) {
+            window.location.href = "place/edit/" + e;
         }
 
         function getAccounts() {
@@ -49,8 +57,8 @@
                 })
                 .then(function(myJson) {
                     console.log(JSON.stringify(myJson.result));
-                    let books = myJson.result;
-                    setTable(books);
+                    books = myJson.result;
+                    setTable();
                 });
         }
 
@@ -71,6 +79,7 @@
         <th>closeAt</th>
         <th>reserve</th>
         <th>reserveMax</th>
+        <th></th>
     </tr>
     </thead>
     <tbody id="list">
