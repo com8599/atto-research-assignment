@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 수정</title>
+</head>
+<script>
+    function edit() {
+        let data = {
+            kind: document.getElementById("kind").value,
+            state: document.getElementById("state").value,
+            email: document.getElementById("email").value,
+            pw: document.getElementById("pw").value,
+            nickname: document.getElementById("nickname").value,
+            phoneNumber: document.getElementById("phoneNumber").value
+        };
+        console.log(data);
+
+        fetch('/api/v1/accounts/' + document.getElementById("id").innerText, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': sessionStorage.getItem("jwt"),
+            }
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (myJson) {
+                console.log(JSON.stringify(myJson.result));
+                window.location.href = "/admin/user";
+            });
+    }
+</script>
+<body>
+<div>
+    회원 아이디: <span id="id" th:text="${user.id}"></span>
+</div>
+<div>
+    <label for="kind">계정 권한 종류</label>
+</div>
+<div>
+    <select id="kind" th:value="${user.kind}">
+        <option value="0" th:selected="${user.kind}">운영진</option>
+        <option value="1" th:selected="${user.kind}">일반</option>
+    </select>
+</div>
+<div>
+    <label for="state">상태: </label>
+    <input type="number" id="state" th:value="${user.state}">
+</div>
+<div>
+    <label for="email">이메일 입력: </label>
+    <input type="email" id="email" th:value="${user.email}">
+    <button onclick="emailChecked()">이메일 중복 확인</button>
+</div>
+<div>
+    <label for="pw">비밀번호 입력: </label>
+    <input type="password" id="pw">
+</div>
+<div>
+    <label for="nickname">닉네임 입력: </label>
+    <input type="text" id="nickname" th:value="${user.nickname}">
+</div>
+<div>
+    <label for="phoneNumber">전화번호 입력: </label>
+    <input type="tel" id="phoneNumber" th:value="${user.phoneNumber}">
+</div>
+<button onclick="edit()">수정</button>
+</body>
+</html>

@@ -63,6 +63,20 @@ public class AccountService {
         return makeResult(HttpStatus.OK, account.getId());
     }
 
+    @Transactional
+    public ResponseEntity<ResultDto> update(Long id, AccountUpdateRequestDto requestDto) {
+        Account account = accountRepository.findOneWithAuthoritiesByIdAndStateIsLessThan(id, StateKind.DELETE.getId())
+                .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL + " id="+id));
+
+        if (requestDto!=null) {
+            if (requestDto.getPw() != null)
+                requestDto.setPw(passwordEncoder.encode(requestDto.getPw()));
+            account.update(requestDto);
+        }
+
+        return makeResult(HttpStatus.OK, account.getId());
+    }
+
     @Transactional(readOnly = true)
     public ResponseEntity<ResultDto> findById(Long id) {
         Account entity = accountRepository.findOneWithAuthoritiesByIdAndStateIsLessThan(id, StateKind.DELETE.getId())

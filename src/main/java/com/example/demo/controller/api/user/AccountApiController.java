@@ -42,6 +42,17 @@ public class AccountApiController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @PutMapping("{id}")
+    @Operation(summary = "회원 정보 수정-다른사람")
+    public ResponseEntity<ResultDto> update(
+            @PathVariable Long id,
+            @RequestBody AccountUpdateRequestDto requestDto
+    ) {
+        log.info("/api/v1/account/id put controller");
+        return accountService.update(id, requestDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("{id}")
     @Operation(summary = "회원 정보 조회")
     @Parameter(name = "id", required = true, example = "0")
