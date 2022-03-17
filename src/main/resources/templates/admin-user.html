@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>유저 관리 페이지</title>
+    <script>
+        function getReservations() {
+            fetch('api/v1/accounts/list', {
+                method: 'GET',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Authorization': sessionStorage.getItem("jwt"),
+                }
+            })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(myJson) {
+                    console.log(JSON.stringify(myJson.result));
+                    let books = myJson.result;
+                    setTable(books);
+                });
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>
