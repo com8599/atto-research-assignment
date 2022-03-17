@@ -50,9 +50,9 @@
                 window.location.href = "/login";
             } else {
                 getReservations();
-            }
-            if (sessionStorage.getItem("auth").split(",").indexOf("ROLE_ADMIN") >= 0) {
-                document.getElementById("body").innerHTML += '<button onclick="window.location.href=\'/admin\'">운영페이지</button>';
+                if (sessionStorage.getItem("auth").split(",").indexOf("ROLE_ADMIN") >= 0) {
+                    document.getElementById("body").innerHTML += '<button onclick="window.location.href=\'/admin\'">운영페이지</button>';
+                }
             }
         }
 
