@@ -69,8 +69,14 @@
                                 return response.json();
                             })
                             .then(function (myJson) {
-                                console.log(JSON.stringify(myJson.result.token));
                                 sessionStorage.setItem("jwt", "Bearer " + myJson.result.token);
+                                const base64Url = myJson.result.token.split('.')[1];
+                                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                                }).join(''));
+                                sessionStorage.setItem("auth", JSON.parse(jsonPayload).auth);
+                                sessionStorage.setItem("exp", JSON.parse(jsonPayload).exp);
                                 window.location.href = "/";
                             });
                     });
