@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <script>
+        let chkEmail = true;
+
+        function emailChecked() {
+            fetch('api/v1/accounts/email/' + document.getElementById("email").value, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (myJson) {
+                    console.log(JSON.stringify(myJson.result));
+                    chkEmail = myJson.result;
+                    if (myJson.result === true)
+                        alert("중복된 이메일이 존재합니다. 다시 입력 바랍니다.");
+                    else
+                        alert("인증완료 되었습니다.");
+                });
+        }
+
+
+        function sign() {
+            let data = {
+                kind: document.getElementById("kind").value,
+                email: document.getElementById("email").value,
+                pw: document.getElementById("pw").value,
+                nickname: document.getElementById("nickname").value,
+                phoneNumber: document.getElementById("phoneNumber").value
+            };
+            console.log(data);
+            if (chkEmail)
+                alert("중복된 이메일이 존재합니다. 다시 입력 바랍니다.");
+            else {
+                fetch('api/v1/accounts', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (myJson) {
+                        console.log(JSON.stringify(myJson.result));
+                        sessionStorage.setItem("self", myJson.result);
+
+                        data = {
+                            email: document.getElementById("email").value,
+                            password: document.getElementById("pw").value
+                        };
+
+                        fetch('api/v1/authenticates', {
+                            method: 'POST',
+                            body: JSON.stringify(data),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                            .then(function (response) {
+                                return response.json();
+                            })
+                            .then(function (myJson) {
+                                console.log(JSON.stringify(myJson.result.token));
+                                sessionStorage.setItem("jwt", "Bearer " + myJson.result.token);
+                                window.location.href = "/";
+                            });
+                    });
+            }
+        }
+    </script>
+</head>
+<body>
+<div>
+    <label for="kind">계정 권한 종류</label>
+</div>
+<div>
+    <select id="kind">
+        <option value="0">운영진</option>
+        <option value="1" selected>일반</option>
+    </select>
+</div>
+<div>
+    <label for="email">이메일 입력: </label>
+    <input type="email" id="email" placeholder="example@gmail.com 형식으로 입력하세요.">
+    <button onclick="emailChecked()">이메일 중복 확인</button>
+</div>
+<div>
+    <label for="pw">비밀번호 입력: </label>
+    <input type="password" id="pw">
+</div>
+<div>
+    <label for="nickname">닉네임 입력: </label>
+    <input type="text" id="nickname">
+</div>
+<div>
+    <label for="phoneNumber">전화번호 입력: </label>
+    <input type="tel" id="phoneNumber">
+</div>
+<button onclick="sign()">가입</button>
+</body>
+</html>
