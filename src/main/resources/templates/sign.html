@@ -51,7 +51,7 @@
                     })
                     .then(function (myJson) {
                         console.log(JSON.stringify(myJson.result));
-                        sessionStorage.setItem("self", myJson.result);
+                        sessionStorage.setItem("self", JSON.stringify(myJson.result).toString());
 
                         data = {
                             email: document.getElementById("email").value,
