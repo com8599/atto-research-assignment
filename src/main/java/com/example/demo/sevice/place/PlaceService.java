@@ -44,6 +44,7 @@ public class PlaceService {
         return makeResult(HttpStatus.OK, new PlaceRequestDto(place));
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<ResultDto> findAll() {
         List<Place> place = placeRepository.findAllByStateIsLessThan(StateKind.DELETE.getId());
 

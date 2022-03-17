@@ -68,6 +68,7 @@ public class AccountService {
         return makeResult(HttpStatus.OK, new AccountRequestDto(entity));
     }
 
+    @Transactional(readOnly = true)
     public ResponseEntity<ResultDto> emailExisted(String email) {
         return makeResult(HttpStatus.OK, accountRepository.findByEmailAndStateIsLessThan(email, StateKind.DELETE.getId()).isPresent());
     }
