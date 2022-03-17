@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <title>시설 예약 상황 페이지</title>
+    <script>
+        function setTable(books) {
+            let list = document.getElementById("list");
+            books.forEach(e => {
+                let tr = document.createElement("tr");
+                let td = document.createElement("td");
+                td.innerText = e.id;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.state;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.place.name;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.account.nickname;
+                tr.appendChild(td);
+                td = document.createElement("td");
+                td.innerText = e.reserveAt;
+                tr.appendChild(td);
+                list.appendChild(tr);
+            });
+        }
+
+        function getReservations() {
+            fetch('api/v1/reservations/list', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': sessionStorage.getItem("jwt"),
+                }
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (myJson) {
+                    console.log(JSON.stringify(myJson.result));
+                    let books = myJson.result;
+                    setTable(books);
+                });
+        }
+
+        window.onload = function () {
+            if (sessionStorage.getItem("jwt") === null) {
+                window.location.href = "/login";
+            } else {
+                getReservations();
+            }
+            if (sessionStorage.getItem("auth").split(",").indexOf("ROLE_ADMIN") >= 0) {
+                document.getElementById("body").innerHTML += '<button onclick="window.location.href=\'/admin\'">운영페이지</button>';
+            }
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            location.reload();
+        }
+    </script>
+</head>
+<body id="body">
+<table>
+    <thead>
+    <tr>
+        <th> id</th>
+        <th> state</th>
+        <th> place</th>
+        <th> account</th>
+        <th> reserveAt</th>
+    </tr>
+    </thead>
+    <tbody id="list">
+    </tbody>
+</table>
+
+<button onclick="logout()">로그아웃</button>
+</body>
+</html>
