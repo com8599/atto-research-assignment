@@ -26,6 +26,11 @@ public class AdminViewController {
         return "user-edit";
     }
 
+    @RequestMapping("user/save")
+    public String userSave() {
+        return "user-save";
+    }
+
     @RequestMapping("place")
     public String place() {
         return "admin-place";
@@ -35,5 +40,10 @@ public class AdminViewController {
     public String placeEdit(@PathVariable Long id, Model model) {
         model.addAttribute("place", placeService.findById(id).getBody().getResult());
         return "place-edit";
+    }
+
+    @RequestMapping("place/save")
+    public String placeSave() {
+        return "place-save";
     }
 }
