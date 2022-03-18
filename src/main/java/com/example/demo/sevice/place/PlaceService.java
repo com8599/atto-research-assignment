@@ -54,18 +54,26 @@ public class PlaceService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ResultDto> findAll(int sort, int page) {
+    public ResponseEntity<ResultDto> findAll(int sort, int page, String name) {
         PageRequest pageRequest = PageRequest.of(page, 10);
         List<Place> place = new ArrayList<>();
 
+        boolean undefined = name != null && !name.equals("") && !name.equals("undefined");
         if (sort == 0) {
-            place = placeRepository.findAllByStateIsLessThan(StateKind.DELETE.getId(), pageRequest);
+            if (undefined)
+                place = placeRepository.findAllByStateIsLessThanAndNameLike(StateKind.DELETE.getId(), '%' + name + '%', pageRequest);
+            else
+                place = placeRepository.findAllByStateIsLessThan(StateKind.DELETE.getId(), pageRequest);
         } else if (sort == 1) {
             Account account = SecurityUtil.getCurrentEmail().flatMap(accountRepository::findOneWithAuthoritiesByEmail)
                     .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL));
 
             List<Long> placeIds = reservationRepository.findPlaceIdByStateIsLessThanAndAccountId(StateKind.DELETE.getId(), account.getId());
-            place = placeRepository.findAllByStateIsLessThanAndIdIn(StateKind.DELETE.getId(), placeIds, pageRequest);
+
+            if (undefined)
+                place = placeRepository.findAllByStateIsLessThanAndIdInAndNameLike(StateKind.DELETE.getId(), placeIds, '%' + name + '%', pageRequest);
+            else
+                place = placeRepository.findAllByStateIsLessThanAndIdIn(StateKind.DELETE.getId(), placeIds, pageRequest);
         }
 
         List<PlaceRequestDto> result = new ArrayList<>();

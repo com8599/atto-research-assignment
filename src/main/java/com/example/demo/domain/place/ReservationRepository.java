@@ -16,4 +16,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("select r.place.id from Reservation r where r.state < ?1 and r.account.id = ?2")
     List<Long> findPlaceIdByStateIsLessThanAndAccountId(int limit, Long id);
+
+    List<Reservation> findAllByStateIsLessThanAndPlaceNameLike(int limit, String name, Pageable pageable);
+
+    List<Reservation> findAllByStateIsLessThanAndAccountIdAndPlaceNameLike(int limit, Long id, String name, Pageable pageable);
 }

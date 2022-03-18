@@ -72,16 +72,23 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ResultDto> findAll(int sort, int page) {
+    public ResponseEntity<ResultDto> findAll(int sort, int page, String name) {
         PageRequest pageRequest = PageRequest.of(page, 10);
         List<Reservation> list = new ArrayList<>();
 
+        boolean undefined = name != null && !name.equals("") && !name.equals("undefined");
         if (sort == 0) {
-            list = reservationRepository.findAllByStateIsLessThan(StateKind.DELETE.getId(), pageRequest);
+            if (undefined)
+                list = reservationRepository.findAllByStateIsLessThanAndPlaceNameLike(StateKind.DELETE.getId(), '%' + name + '%', pageRequest);
+            else
+                list = reservationRepository.findAllByStateIsLessThan(StateKind.DELETE.getId(), pageRequest);
         } else if (sort == 1) {
             Account account = SecurityUtil.getCurrentEmail().flatMap(accountRepository::findOneWithAuthoritiesByEmail)
                     .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL));
-            list = reservationRepository.findAllByStateIsLessThanAndAccountId(StateKind.DELETE.getId(), account.getId(), pageRequest);
+            if (undefined)
+                list = reservationRepository.findAllByStateIsLessThanAndAccountIdAndPlaceNameLike(StateKind.DELETE.getId(), account.getId(), '%' + name + '%', pageRequest);
+            else
+                list = reservationRepository.findAllByStateIsLessThanAndAccountId(StateKind.DELETE.getId(), account.getId(), pageRequest);
         }
 
         List<ReservationRequestDto> result = new ArrayList<>();

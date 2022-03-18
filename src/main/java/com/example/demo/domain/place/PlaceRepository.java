@@ -12,4 +12,8 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     List<Place> findAllByStateIsLessThan(int limit, Pageable pageable);
 
     List<Place> findAllByStateIsLessThanAndIdIn(int limit, List<Long> ids, Pageable pageable);
+
+    List<Place> findAllByStateIsLessThanAndNameLike(int limit, String name, Pageable pageable);
+
+    List<Place> findAllByStateIsLessThanAndIdInAndNameLike(int limit, List<Long> placeIds, String name, Pageable pageable);
 }
