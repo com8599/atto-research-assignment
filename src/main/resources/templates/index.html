@@ -4,52 +4,119 @@
     <meta charset="UTF-8">
     <title>시설 예약 상황 페이지</title>
     <script>
-        function setTable(books) {
+        function setTable(books, isPlace) {
             let list = document.getElementById("list");
             while (list.firstChild) {
                 list.removeChild(list.firstChild);
             }
 
-            books.forEach(e => {
-                let tr = document.createElement("tr");
-                let td = document.createElement("td");
-                td.innerText = e.id;
-                tr.appendChild(td);
-                td = document.createElement("td");
-                td.innerText = e.state;
-                tr.appendChild(td);
-                td = document.createElement("td");
-                td.innerText = e.place.name;
-                tr.appendChild(td);
-                td = document.createElement("td");
-                td.innerText = e.account.nickname;
-                tr.appendChild(td);
-                td = document.createElement("td");
-                td.innerText = e.reserveAt;
-                tr.appendChild(td);
-                list.appendChild(tr);
-            });
+            if (isPlace === 0) {
+                document.getElementById("header").innerHTML = "<tr><th>id</th><th>state</th><th> place</th><th> account</th><th>reserveAt</th></tr>";
+                books.forEach(e => {
+                    let tr = document.createElement("tr");
+                    let td = document.createElement("td");
+                    td.innerText = e.id;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.state;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.place.name;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.account.nickname;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.reserveAt;
+                    tr.appendChild(td);
+                    list.appendChild(tr);
+                });
+            } else if (isPlace === 1) {
+                document.getElementById("header").innerHTML = "<tr><th>id</th><th>state</th><th>address</th><th>openAt</th><th>closeAt</th><th>reserve</th><th>reserveNow</th><th>reserveMax</th></tr>";
+                books.forEach(e => {
+                    let tr = document.createElement("tr");
+                    let td = document.createElement("td");
+                    td.innerText = e.id;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.state;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.address;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.openAt;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.closeAt;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.closeAt;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.reserve;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.reserveNow;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerText = e.reserveMax;
+                    tr.appendChild(td);
+                    if (e.reserveMax - e.reserveNow > 0) {
+                        td = document.createElement("td");
+                        td.innerHTML = "<button onclick='reserve(" + e.id + ")'>예약하기</button>";
+                        tr.appendChild(td);
+                    }
+                    list.appendChild(tr);
+                });
+            }
+        }
+
+        function reserve(id) {
+            window.location.href="/reserve/" + id;
         }
 
         function getReservations() {
             let selected = document.getElementById("sort");
             let selectedValue = selected.options[selected.selectedIndex].value;
+            let selectedIsPlace = document.getElementById("isPlace");
+            let selectedValueIsPlace = selectedIsPlace.options[selectedIsPlace.selectedIndex].value;
 
-            fetch('api/v1/reservations/list/' + selectedValue + "/" + document.getElementById("page").value, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': sessionStorage.getItem("jwt"),
-                }
-            })
-                .then(function (response) {
-                    return response.json();
+            if (selectedValueIsPlace === "0") {
+                console.log("예약");
+                fetch('api/v1/reservations/list/' + selectedValue + "/" + document.getElementById("page").value, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': sessionStorage.getItem("jwt"),
+                    }
                 })
-                .then(function (myJson) {
-                    console.log(JSON.stringify(myJson.result));
-                    let books = myJson.result;
-                    setTable(books);
-                });
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (myJson) {
+                        console.log(JSON.stringify(myJson.result));
+                        let books = myJson.result;
+                        setTable(books, 0);
+                    });
+            } else if (selectedValueIsPlace === "1") {
+                console.log("장소");
+                fetch('api/v1/places/list/' + selectedValue + "/" + document.getElementById("page").value, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': sessionStorage.getItem("jwt"),
+                    }
+                })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (myJson) {
+                        console.log(JSON.stringify(myJson.result));
+                        let books = myJson.result;
+                        setTable(books, 1);
+                    });
+            }
         }
 
         window.onload = function () {
@@ -75,8 +142,13 @@
     <option value="0" selected>전체 보기</option>
     <option value="1">내 예약 상태 보기</option>
 </select>
+<label for="isPlace">기준</label>
+<select id="isPlace" onchange="getReservations()">
+    <option value="0" selected>예약</option>
+    <option value="1">장소</option>
+</select>
 <table>
-    <thead>
+    <thead id="header">
     <tr>
         <th> id</th>
         <th> state</th>
