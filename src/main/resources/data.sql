@@ -16,3 +16,6 @@ insert into place(name, address, open_at, close_at, reserve, reserve_max) values
 
 insert into reservation(place_id, account_id, reserve_at) values (1, 1, now());
 insert into reservation(place_id, account_id, reserve_at) values (1, 2, now());
+
+insert into place_reservation(place_id, reservation_id) values (1, 1);
+insert into place_reservation(place_id, reservation_id) values (1, 2);

@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -46,6 +47,10 @@ public class Place {
     private boolean reserve;
 
     private int reserveMax;
+
+    @ManyToMany
+    @JoinTable
+    private List<Reservation> reservation;
 
     public void update(PlaceUpdateRequestDto requestDto) {
         Optional.ofNullable(requestDto.getState()).ifPresent(e -> this.state = e);
