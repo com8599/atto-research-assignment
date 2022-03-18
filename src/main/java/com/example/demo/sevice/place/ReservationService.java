@@ -13,6 +13,7 @@ import com.example.demo.dto.place.ReservationUpdateRequestDto;
 import com.example.demo.model.StateKind;
 import com.example.demo.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -65,8 +66,17 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ResultDto> findAll() {
-        List<Reservation> list = reservationRepository.findAllByStateIsLessThan(StateKind.DELETE.getId());
+    public ResponseEntity<ResultDto> findAll(int sort, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        List<Reservation> list = new ArrayList<>();
+
+        if (sort == 0) {
+            list = reservationRepository.findAllByStateIsLessThan(StateKind.DELETE.getId(), pageRequest);
+        } else if (sort == 1) {
+            Account account = SecurityUtil.getCurrentEmail().flatMap(accountRepository::findOneWithAuthoritiesByEmail)
+                    .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL));
+            list = reservationRepository.findAllByStateIsLessThanAndAccountId(StateKind.DELETE.getId(), account.getId(), pageRequest);
+        }
 
         List<ReservationRequestDto> result = new ArrayList<>();
         for (Reservation reservation : list) {

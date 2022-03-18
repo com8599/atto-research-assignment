@@ -6,6 +6,10 @@
     <script>
         function setTable(books) {
             let list = document.getElementById("list");
+            while (list.firstChild) {
+                list.removeChild(list.firstChild);
+            }
+
             books.forEach(e => {
                 let tr = document.createElement("tr");
                 let td = document.createElement("td");
@@ -28,7 +32,10 @@
         }
 
         function getReservations() {
-            fetch('api/v1/reservations/list', {
+            let selected = document.getElementById("sort");
+            let selectedValue = selected.options[selected.selectedIndex].value;
+
+            fetch('api/v1/reservations/list/' + selectedValue + "/" + document.getElementById("page").value, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -63,6 +70,11 @@
     </script>
 </head>
 <body id="body">
+<label for="sort">분류</label>
+<select id="sort" onchange="getReservations()">
+    <option value="0" selected>전체 보기</option>
+    <option value="1">내 예약 상태 보기</option>
+</select>
 <table>
     <thead>
     <tr>
@@ -77,6 +89,8 @@
     </tbody>
 </table>
 
+<label for="page">page: </label><input id="page" type="number" value="0">
+<button onclick="getReservations()">조회</button>
 <button onclick="logout()">로그아웃</button>
 </body>
 </html>

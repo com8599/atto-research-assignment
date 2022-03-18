@@ -40,9 +40,9 @@ public class ReservationApiController {
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("list")
+    @GetMapping("list/{sort}/{page}")
     @Operation(summary = "예약다가져오기")
-    public ResponseEntity<ResultDto> findAll() {
-        return reservationService.findAll();
+    public ResponseEntity<ResultDto> findAll(@PathVariable int sort, @PathVariable int page) {
+        return reservationService.findAll(sort, page);
     }
 }
