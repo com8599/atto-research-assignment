@@ -40,7 +40,7 @@ public class AccountService {
             AccountSaveRequestDto requestDto
     ) {
         if (accountRepository.findOneWithAuthoritiesByEmailAndStateIsLessThan(requestDto.getEmail(), StateKind.DELETE.getId()).orElse(null) != null) {
-            throw new IllegalArgumentException("이미 가입되어 있는 유저입니다.");
+            return makeResult(HttpStatus.INTERNAL_SERVER_ERROR, "이미 가입되어 있는 유저입니다.");
         }
 
         Account account = accountDecorator.save(requestDto);
@@ -92,12 +92,14 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<ResultDto> login(AccountLoginRequestDto requestDto) {
-        Account account = accountRepository.findOneWithAuthoritiesByEmailAndStateIsLessThan(requestDto.getEmail(), StateKind.DELETE.getId())
-                .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL_EMAIL + requestDto.getEmail()));
+        Account account = accountRepository.findOneWithAuthoritiesByEmailAndStateIsLessThan(requestDto.getEmail(), StateKind.DELETE.getId()).orElse(null);
+
+        if (account == null)
+            return makeResult(HttpStatus.BAD_REQUEST, "없는 계정입니다.");
         if (passwordEncoder.matches(requestDto.getPassword(), account.getPw())) {
             return makeResult(HttpStatus.OK, new AccountRequestDto(account));
         }
-        return makeResult(HttpStatus.BAD_REQUEST, null);
+        return makeResult(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
     }
 
     @Transactional(readOnly = true)
