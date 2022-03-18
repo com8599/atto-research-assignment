@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>예약 추가하기</title>
+    <script>
+        function save() {
+            let data = {
+                placeId: document.getElementById("id").innerText*1,
+                accountId: JSON.parse(sessionStorage.getItem("self")).id,
+                reserveAt: document.getElementById("reserveAt").value
+            };
+            console.log(data);
+
+            fetch('/api/v1/reservations', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': sessionStorage.getItem("jwt"),
+                }
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (myJson) {
+                    console.log(JSON.stringify(myJson.status));
+                    if (myJson.status === "INTERNAL_SERVER_ERROR")
+                        window.alert("예약이 꽉찼습니다.");
+                    else
+                        window.location.href = "/";
+                });
+        }
+    </script>
+</head>
+<body>
+<div>
+    장소 아이디: <span id="id" th:text="${id}"></span>
+</div>
+<div>
+    <label for="reserveAt">예약 시간: </label>
+    <input type="datetime-local" id="reserveAt">
+</div>
+<button onclick="save()">예약하기</button>
+<button onclick="window.location.href = '/'">메인화면으로 돌아가기</button>
+</body>
+</html>

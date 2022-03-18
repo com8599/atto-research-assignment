@@ -42,7 +42,13 @@ public class ReservationService {
         Account account = SecurityUtil.getCurrentEmail().flatMap(accountRepository::findOneWithAuthoritiesByEmail)
                 .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL));
 
-        return makeResult(HttpStatus.OK, reservationRepository.save(requestDto.toEntity(place, account)).getId());
+        if (place.getReserveMax() <= place.getReservation().size()) {
+            return makeResult(HttpStatus.INTERNAL_SERVER_ERROR, "예약 값이 초과 되었습니다.");
+        }
+
+        Reservation reservation = reservationRepository.save(requestDto.toEntity(place, account));
+        place.getReservation().add(reservation);
+        return makeResult(HttpStatus.OK, reservation.getId());
     }
 
     @Transactional
