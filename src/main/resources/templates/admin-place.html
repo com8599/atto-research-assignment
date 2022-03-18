@@ -45,7 +45,7 @@
         }
 
         function getAccounts() {
-            fetch('/api/v1/places/list/0/0', {
+            fetch('/api/v1/places/list/0/0/undefined', {
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',
@@ -86,5 +86,6 @@
     </tbody>
 </table>
 <button onclick="window.location.href='../admin'">어드민으로 돌아가기</button>
+<button onclick="window.location.href='/admin/place/save'">장소 추가하기</button>
 </body>
 </html>
