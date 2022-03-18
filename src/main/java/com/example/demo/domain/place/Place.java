@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.sql.Time;
@@ -48,7 +50,8 @@ public class Place {
 
     private int reserveMax;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinTable
     private List<Reservation> reservation;
 
