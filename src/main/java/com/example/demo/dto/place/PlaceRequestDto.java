@@ -29,6 +29,9 @@ public class PlaceRequestDto {
     @Schema(description = "예약 가능 여부")
     private final boolean reserve;
 
+    @Schema(description = "현재 예약 인원")
+    private final int reserveNow;
+
     @Schema(description = "최대 예약 인원")
     private final int reserveMax;
 
@@ -40,6 +43,7 @@ public class PlaceRequestDto {
         this.openAt = place.getOpenAt();
         this.closeAt = place.getCloseAt();
         this.reserve = place.isReserve();
+        this.reserveNow = place.getReservation().size();
         this.reserveMax = place.getReserveMax();
     }
 }

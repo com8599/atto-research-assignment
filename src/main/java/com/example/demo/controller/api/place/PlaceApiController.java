@@ -42,9 +42,9 @@ public class PlaceApiController {
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("list")
+    @GetMapping("list/{sort}/{page}")
     @Operation(summary = "장소 조회 - 다수")
-    public ResponseEntity<ResultDto> findAll() {
-        return placeService.findAll();
+    public ResponseEntity<ResultDto> findAll(@PathVariable int sort, @PathVariable int page) {
+        return placeService.findAll(sort, page);
     }
 }

@@ -2,12 +2,17 @@ package com.example.demo.sevice.place;
 
 import com.example.demo.domain.place.Place;
 import com.example.demo.domain.place.PlaceRepository;
+import com.example.demo.domain.place.ReservationRepository;
+import com.example.demo.domain.user.Account;
+import com.example.demo.domain.user.AccountRepository;
 import com.example.demo.dto.ResultDto;
 import com.example.demo.dto.place.PlaceRequestDto;
 import com.example.demo.dto.place.PlaceSaveRequestDto;
 import com.example.demo.dto.place.PlaceUpdateRequestDto;
 import com.example.demo.model.StateKind;
+import com.example.demo.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +27,10 @@ import static com.example.demo.dto.ResultDto.makeResult;
 @RequiredArgsConstructor
 public class PlaceService {
     private final PlaceRepository placeRepository;
+    private final ReservationRepository reservationRepository;
+    private final AccountRepository accountRepository;
+
+    private static final String ACCOUNT_NULL = "해당하는 유저가 없습니다.";
 
     @Transactional
     public ResponseEntity<ResultDto> save(PlaceSaveRequestDto requestDto) {
@@ -45,8 +54,19 @@ public class PlaceService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ResultDto> findAll() {
-        List<Place> place = placeRepository.findAllByStateIsLessThan(StateKind.DELETE.getId());
+    public ResponseEntity<ResultDto> findAll(int sort, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        List<Place> place = new ArrayList<>();
+
+        if (sort == 0) {
+            place = placeRepository.findAllByStateIsLessThan(StateKind.DELETE.getId(), pageRequest);
+        } else if (sort == 1) {
+            Account account = SecurityUtil.getCurrentEmail().flatMap(accountRepository::findOneWithAuthoritiesByEmail)
+                    .orElseThrow(() -> new IllegalArgumentException(ACCOUNT_NULL));
+
+            List<Long> placeIds = reservationRepository.findPlaceIdByStateIsLessThanAndAccountId(StateKind.DELETE.getId(), account.getId());
+            place = placeRepository.findAllByStateIsLessThanAndIdIn(StateKind.DELETE.getId(), placeIds, pageRequest);
+        }
 
         List<PlaceRequestDto> result = new ArrayList<>();
         for (Place p : place) {
