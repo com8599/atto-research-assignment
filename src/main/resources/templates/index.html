@@ -82,9 +82,11 @@
             let selectedIsPlace = document.getElementById("isPlace");
             let selectedValueIsPlace = selectedIsPlace.options[selectedIsPlace.selectedIndex].value;
 
+            let name = document.getElementById("name").value;
+            name = name===""?"undefined":name;
             if (selectedValueIsPlace === "0") {
                 console.log("예약");
-                fetch('api/v1/reservations/list/' + selectedValue + "/" + document.getElementById("page").value, {
+                fetch('api/v1/reservations/list/' + selectedValue + "/" + document.getElementById("page").value + "/" + name, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -101,7 +103,7 @@
                     });
             } else if (selectedValueIsPlace === "1") {
                 console.log("장소");
-                fetch('api/v1/places/list/' + selectedValue + "/" + document.getElementById("page").value, {
+                fetch('api/v1/places/list/' + selectedValue + "/" + document.getElementById("page").value + "/" + name, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -147,6 +149,7 @@
     <option value="0" selected>예약</option>
     <option value="1">장소</option>
 </select>
+<label for="name">장소이름: </label><input id="name" type="text" placeholder="장소이름을 입력해주세요">
 <table>
     <thead id="header">
     <tr>
